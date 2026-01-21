@@ -1,6 +1,6 @@
-# Voice Agent Email Integration (FastAPI + Vapi)
+# Voice Agent Email Integration (FastAPI + Vapi + React)
 
-Real-time webhook handler that enables AI Voice Agents to dispatch emails mid-call.
+Real-time webhook handler that enables AI Voice Agents to dispatch emails mid-call, with a sleek React dashboard for voice interactions.
 
 [**Watch the 60s Demo**](YOUR_LOOM_LINK_HERE)
 
@@ -8,34 +8,47 @@ Real-time webhook handler that enables AI Voice Agents to dispatch emails mid-ca
 
 ## The Problem
 
-Voice AI agents are great at talking, but bad at doing. Most agents can't trigger external actions (like sending a quote or calendar invite) without breaking the conversation flow.
+Voice AI agents are great at talking, but bad at doing. Most agents can't trigger external actions (like sending a quote or calendar invite) without breaking the conversation flow. And most voice UIs look like an afterthought.
 
 ## The Solution
 
-I built a custom FastAPI backend that serves as a middleware between the Vapi Voice Agent and SMTP email servers.
+I built a custom FastAPI backend that serves as a middleware between the Vapi Voice Agent and SMTP email servers, plus a modern React frontend for voice interactions.
 
 - **Zero Latency** - Handles the webhook asynchronously so the voice agent doesn't pause
 - **Context Aware** - Extracts specific data (Name, Email, Topic) from the conversation payload
 - **Reliable** - Uses Pydantic for strict data validation before attempting delivery
+- **Modern UI** - React dashboard with animated orb, live waveform, and mute controls
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|------------|
-| Core | Python, FastAPI |
-| Voice | Vapi.ai (Webhooks) |
-| Infrastructure | Ngrok (Dev), SMTP (Email) |
+| Frontend | React 19, Vite, Tailwind CSS, Vapi Web SDK |
+| Backend | Python, FastAPI |
+| Voice | Vapi.ai (Webhooks + Web SDK) |
+| UI Components | ElevenLabs UI (Orb, Waveform) |
+| Infrastructure | Ngrok (Dev), Gmail SMTP |
 
 ---
 
 ## Features
 
+### Backend
 - **Mid-Call Email Actions** - Send quotes, documents, or information while the voice agent is on a call
 - **Post-Call Webhooks** - Automatically trigger follow-up emails when calls end
 - **Smart Email Extraction** - Finds user email from customer data, transcripts, or conversation context
-- **HTML Email Templates** - Professional, responsive templates with dynamic content
+- **Dark-Themed Email Templates** - Sleek, responsive HTML emails with dynamic content
+
+### Frontend (React Dashboard)
+- **Animated Orb** - Visual feedback that responds to voice activity
+- **Live Waveform** - Real-time audio visualization during calls
+- **Mute Toggle** - Click mic to mute/unmute during active calls
+- **Connection States** - Shimmering text during connection, clear status indicators
+- **Dark Mode UI** - Modern dark theme matching the email templates
 
 ## Quick Start
+
+### Backend
 
 ```bash
 # Clone and install
@@ -52,9 +65,24 @@ uvicorn main:app --reload --port 8000
 
 Visit http://localhost:8000 to see the API landing page, or http://localhost:8000/docs for interactive API documentation.
 
+### Frontend
+
+```bash
+cd dashboard
+npm install
+
+# Create .env with Vapi credentials
+# VITE_VAPI_PUBLIC_KEY=your-public-key
+# VITE_VAPI_ASSISTANT_ID=your-assistant-id
+
+npm run dev
+```
+
+Visit http://localhost:5173 for the voice chat dashboard.
+
 ## Configuration
 
-Create a `.env` file:
+### Backend (.env)
 
 ```
 GMAIL_USER=your-email@gmail.com
@@ -63,6 +91,13 @@ COMPANY_NAME=Your Company Name
 ```
 
 Note: Gmail requires an App Password (https://myaccount.google.com/apppasswords). Regular passwords will not work with SMTP.
+
+### Frontend (dashboard/.env)
+
+```
+VITE_VAPI_PUBLIC_KEY=your-vapi-public-key
+VITE_VAPI_ASSISTANT_ID=your-vapi-assistant-id
+```
 
 ## API Endpoints
 
@@ -109,10 +144,13 @@ Enable "end-of-call-report" messages.
 ## Local Development with ngrok
 
 ```bash
-# Terminal 1: Run the server
+# Terminal 1: Run the backend
 uvicorn main:app --reload --port 8000
 
-# Terminal 2: Expose to internet
+# Terminal 2: Run the frontend
+cd dashboard && npm run dev
+
+# Terminal 3: Expose backend to internet
 ngrok http 8000
 ```
 
@@ -122,25 +160,36 @@ Use the ngrok URL in your Vapi configuration.
 
 ```
 voice-agent-email-actions/
-  main.py                   # FastAPI application
-  requirements.txt          # Dependencies
-  templates/
-    index.html              # Landing page
-    info_email.html         # Mid-call email template
-    followup_email.html     # Post-call email template
-  static/
-    styles.css              # Landing page styles
+├── main.py                     # FastAPI application
+├── requirements.txt            # Python dependencies
+├── templates/
+│   ├── index.html              # Landing page
+│   ├── info_email.html         # Mid-call email template
+│   └── followup_email.html     # Post-call email template
+├── static/
+│   └── styles.css              # Landing page styles
+└── dashboard/                  # React frontend
+    ├── src/
+    │   ├── App.tsx             # Main app component
+    │   ├── components/
+    │   │   ├── VoiceChat.tsx   # Voice chat UI
+    │   │   └── ui/             # UI components
+    │   │       ├── orb.tsx     # Animated orb
+    │   │       ├── live-waveform.tsx
+    │   │       ├── button.tsx
+    │   │       └── ...
+    │   └── lib/
+    │       └── utils.ts        # Utilities
+    ├── package.json
+    ├── tailwind.config.js
+    └── vite.config.ts
 ```
 
 ## Customization
 
-Edit the HTML templates in /templates to match your brand. Templates use simple {variable} placeholders for dynamic content.
-
-## Tech Stack
-
-- FastAPI - Modern Python web framework
-- Vapi.ai - Voice AI platform integration
-- Gmail SMTP - Email delivery
+- **Email Templates** - Edit HTML files in `/templates`. Uses `{variable}` placeholders.
+- **Voice UI** - Modify `dashboard/src/components/VoiceChat.tsx` for layout, colors, agent name.
+- **Orb Colors** - Change the `ORB_COLORS` constant in VoiceChat.tsx.
 
 ## License
 
