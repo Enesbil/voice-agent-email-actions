@@ -1,77 +1,147 @@
-#Voice Agent Email Functionality Backend
+# Voice Agent Email Integration (FastAPI + Vapi)
 
-FastAPI backend for a Vapi.ai voice agent demo. Sends emails during calls and after calls end.
+Real-time webhook handler that enables AI Voice Agents to dispatch emails mid-call.
 
-## What it does
+[**Watch the 60s Demo**](YOUR_LOOM_LINK_HERE)
 
-- **Mid-call tool** (`POST /send-specific-email`) - AI triggers this when user asks for documents/quotes
-- **Post-call webhook** (`POST /vapi-webhook`) - Vapi calls this when a call ends, sends follow-up email
+---
 
-## Prerequisites for Demo
+## The Problem
 
-1. **Vapi.ai account** - You need to set up your voice agent in Vapi first
-2. **Gmail App Password (SMTP)** - Regular Gmail password won't work. [Create an App Password](https://myaccount.google.com/apppasswords)
-3. **Public URL** - Vapi needs to reach your server (use ngrok for local dev)
+Voice AI agents are great at talking, but bad at doing. Most agents can't trigger external actions (like sending a quote or calendar invite) without breaking the conversation flow.
 
-## Setup
+## The Solution
+
+I built a custom FastAPI backend that serves as a middleware between the Vapi Voice Agent and SMTP email servers.
+
+- **Zero Latency** - Handles the webhook asynchronously so the voice agent doesn't pause
+- **Context Aware** - Extracts specific data (Name, Email, Topic) from the conversation payload
+- **Reliable** - Uses Pydantic for strict data validation before attempting delivery
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Core | Python, FastAPI |
+| Voice | Vapi.ai (Webhooks) |
+| Infrastructure | Ngrok (Dev), SMTP (Email) |
+
+---
+
+## Features
+
+- **Mid-Call Email Actions** - Send quotes, documents, or information while the voice agent is on a call
+- **Post-Call Webhooks** - Automatically trigger follow-up emails when calls end
+- **Smart Email Extraction** - Finds user email from customer data, transcripts, or conversation context
+- **HTML Email Templates** - Professional, responsive templates with dynamic content
+
+## Quick Start
 
 ```bash
-# Install deps
-pip install fastapi uvicorn python-dotenv pydantic email-validator
+# Clone and install
+git clone https://github.com/yourusername/voice-agent-email-actions.git
+cd voice-agent-email-actions
+pip install -r requirements.txt
 
-# Create .env file
-echo "GMAIL_USER=your-email@gmail.com" > .env
-echo "GMAIL_APP_PASSWORD=your-16-char-app-password" >> .env
+# Configure environment
+# Create .env with your Gmail credentials
 
-# Run it
+# Run
 uvicorn main:app --reload --port 8000
 ```
 
-## Vapi Configuration
+Visit http://localhost:8000 to see the API landing page, or http://localhost:8000/docs for interactive API documentation.
 
-This backend won't do anything until you wire it up in Vapi:
+## Configuration
 
-### 1. Mid-call tool (for sending docs on request)
+Create a `.env` file:
 
-In your Vapi assistant, add a **Server URL tool**:
-- **Name:** `sendInfoEmail`
-- **URL:** `https://your-server.com/send-specific-email`
-- **Parameters:**
-  - `user_email` (string, required)
-  - `user_name` (string)
-  - `topic` (string)
+```
+GMAIL_USER=your-email@gmail.com
+GMAIL_APP_PASSWORD=your-16-char-app-password
+COMPANY_NAME=Your Company Name
+```
 
-### 2. Post-call webhook (for follow-up emails)
+Note: Gmail requires an App Password (https://myaccount.google.com/apppasswords). Regular passwords will not work with SMTP.
 
-In your Vapi assistant settings:
-- **Server URL:** `https://your-server.com/vapi-webhook`
+## API Endpoints
 
-Make sure "end-of-call-report" messages are enabled.
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /send-specific-email | Mid-call tool - sends info email on request |
+| POST | /vapi-webhook | Post-call webhook - sends follow-up email |
+| GET | /health | Health check |
+| GET | / | Landing page |
 
-## Endpoints
+### Mid-Call Tool Parameters
 
-| Method | Path | Purpose |
-|--------|------|---------|
-| POST | `/send-specific-email` | Mid-call tool - sends info email |
-| POST | `/vapi-webhook` | Post-call hook - sends follow-up |
-| GET | `/` | Health check |
-| GET | `/health` | Health check |
+```json
+{
+  "user_email": "user@example.com",
+  "user_name": "John",
+  "topic": "insurance quote"
+}
+```
 
-## Local dev with ngrok
+## Vapi Integration
+
+### 1. Add the Mid-Call Tool
+
+In your Vapi assistant, create a Server URL tool:
+
+- Name: sendInfoEmail
+- URL: https://your-server.com/send-specific-email
+- Parameters:
+  - user_email (string, required)
+  - user_name (string, optional)
+  - topic (string, optional)
+
+### 2. Configure the Webhook
+
+In your Vapi assistant settings, set the Server URL to:
+
+```
+https://your-server.com/vapi-webhook
+```
+
+Enable "end-of-call-report" messages.
+
+## Local Development with ngrok
 
 ```bash
-# Terminal 1: run the server
+# Terminal 1: Run the server
 uvicorn main:app --reload --port 8000
 
-# Terminal 2: expose it
+# Terminal 2: Expose to internet
 ngrok http 8000
 ```
 
-Use the ngrok URL in your Vapi config.
+Use the ngrok URL in your Vapi configuration.
 
-## Notes
+## Project Structure
 
-- Emails are HTML formatted
-- The webhook tries multiple places to find the user's email (customer data, transcript, etc.)
-- Check your terminal for debug logs if emails aren't sending
+```
+voice-agent-email-actions/
+  main.py                   # FastAPI application
+  requirements.txt          # Dependencies
+  templates/
+    index.html              # Landing page
+    info_email.html         # Mid-call email template
+    followup_email.html     # Post-call email template
+  static/
+    styles.css              # Landing page styles
+```
 
+## Customization
+
+Edit the HTML templates in /templates to match your brand. Templates use simple {variable} placeholders for dynamic content.
+
+## Tech Stack
+
+- FastAPI - Modern Python web framework
+- Vapi.ai - Voice AI platform integration
+- Gmail SMTP - Email delivery
+
+## License
+
+MIT

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Agent Email Actions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <div class="badge">Voice AI Integration</div>
+            <h1>Voice Agent<br>Email Actions</h1>
+            <p class="subtitle">A FastAPI backend that enables voice AI agents to send contextual emails during and after calls. Built for Vapi.ai integration.</p>
+            <div class="hero-actions">
+                <a href="/docs" class="btn btn-primary">
+                    <span>📄</span> API Docs
+                </a>
+                <a href="https://github.com" class="btn btn-secondary" target="_blank">
+                    <span>⚡</span> View Source
+                </a>
+            </div>
+        </header>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📧</div>
+                <h3>Mid-Call Actions</h3>
+                <p>Trigger email sends in real-time while the voice agent is talking. Send quotes, documents, or information the user requests during the conversation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Post-Call Webhooks</h3>
+                <p>Automatically send follow-up emails when calls end. The system extracts user email from customer data or conversation transcript.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>HTML Email Templates</h3>
+                <p>Professional, responsive email templates with dynamic content injection. Easily customizable for any business use case.</p>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>API Endpoints</h2>
+            <p class="subtitle">Production-ready endpoints for voice agent integration</p>
+            
+            <div class="endpoint-list">
+                <div class="endpoint">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/send-specific-email</span>
+                    <span class="endpoint-desc">Mid-call tool — sends info email on request</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/vapi-webhook</span>
+                    <span class="endpoint-desc">Post-call webhook — sends follow-up email</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/health</span>
+                    <span class="endpoint-desc">Health check endpoint</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <span class="tech-tag">FastAPI</span>
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Vapi.ai</span>
+            <span class="tech-tag">SMTP</span>
+            <span class="tech-tag">Webhooks</span>
+            <span class="tech-tag">REST API</span>
+        </div>
+
+        <footer>
+            <p>Built as a demonstration of voice AI email integration capabilities.</p>
+        </footer>
+    </div>
+</body>
+</html>

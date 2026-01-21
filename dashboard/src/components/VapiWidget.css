@@ -1,0 +1,12 @@
+.vapi-widget-wrapper {
+  width: 100%;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vapi-widget-wrapper vapi-widget {
+  width: 100%;
+  height: 100%;
+}
